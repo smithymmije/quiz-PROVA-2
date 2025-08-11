@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz VixGelados</title>
 <style>
     body {
@@ -10,55 +11,71 @@
         color: white;
         text-align: center;
         padding: 20px;
+        margin: 0;
     }
+
     h1 {
         color: #FFD700;
+        font-size: 2rem;
+        margin-bottom: 20px;
     }
+
     .btn {
         background-color: #1E90FF;
         color: white;
         border: none;
         padding: 10px 20px;
-        margin: 5px;
+        margin: 10px 5px;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 1rem;
         border-radius: 8px;
         display: inline-block;
         transition: background-color 0.3s;
+        width: auto;
+        max-width: 90%;
     }
+
     .btn:hover {
         background-color: #4682B4;
     }
+
     .option {
         background-color: #222;
         border: 2px solid #444;
-        padding: 10px;
-        margin: 5px;
+        padding: 12px;
+        margin: 10px auto;
         border-radius: 8px;
         cursor: pointer;
         user-select: none;
         transition: background-color 0.3s, transform 0.2s;
+        max-width: 600px;
+        font-size: 1rem;
     }
+
     .option:hover {
         background-color: #333;
     }
+
     .correct {
         background-color: #28a745 !important;
         border-color: #28a745 !important;
         color: white;
         animation: pulse-correct 0.5s ease;
     }
+
     .wrong {
         background-color: #dc3545 !important;
         border-color: #dc3545 !important;
         color: white;
         animation: shake-wrong 0.5s ease;
     }
+
     @keyframes pulse-correct {
         0% { transform: scale(1); }
         50% { transform: scale(1.05); }
         100% { transform: scale(1); }
     }
+
     @keyframes shake-wrong {
         0% { transform: translateX(0); }
         25% { transform: translateX(-5px); }
@@ -66,13 +83,39 @@
         75% { transform: translateX(-5px); }
         100% { transform: translateX(0); }
     }
+
     .explanation {
         display: block;
-        font-size: 14px;
+        font-size: 0.9rem;
         margin-top: 10px;
         font-style: italic;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* 📱 Responsividade para telas menores */
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+            padding: 8px 16px;
+        }
+
+        .option {
+            font-size: 0.95rem;
+            padding: 10px;
+        }
+
+        .explanation {
+            font-size: 0.85rem;
+        }
     }
 </style>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
