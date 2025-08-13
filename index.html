@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz VixGelados</title>
+<title>Quiz Gestão de Processos</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -13,32 +13,37 @@
         padding: 20px;
         margin: 0;
     }
-
     h1 {
         color: #FFD700;
         font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    h2 {
+        font-size: 1.4rem;
+        color: #1E90FF;
+    }
+    .btn-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
         margin-bottom: 20px;
     }
-
     .btn {
         background-color: #1E90FF;
         color: white;
         border: none;
         padding: 10px 20px;
-        margin: 10px 5px;
         cursor: pointer;
         font-size: 1rem;
         border-radius: 8px;
-        display: inline-block;
         transition: background-color 0.3s;
-        width: auto;
-        max-width: 90%;
+        flex-grow: 1;
+        min-width: 150px;
     }
-
     .btn:hover {
         background-color: #4682B4;
     }
-
     .option {
         background-color: #222;
         border: 2px solid #444;
@@ -50,289 +55,408 @@
         transition: background-color 0.3s, transform 0.2s;
         max-width: 600px;
         font-size: 1rem;
+        text-align: left;
     }
-
     .option:hover {
         background-color: #333;
     }
-
     .correct {
         background-color: #28a745 !important;
         border-color: #28a745 !important;
         color: white;
         animation: pulse-correct 0.5s ease;
     }
-
     .wrong {
         background-color: #dc3545 !important;
         border-color: #dc3545 !important;
         color: white;
         animation: shake-wrong 0.5s ease;
     }
-
     @keyframes pulse-correct {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
+        0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
     }
-
     @keyframes shake-wrong {
-        0% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        50% { transform: translateX(5px); }
-        75% { transform: translateX(-5px); }
-        100% { transform: translateX(0); }
+        0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); }
     }
-
     .explanation {
-        display: block;
-        font-size: 0.9rem;
-        margin-top: 10px;
-        font-style: italic;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
+        display: block; font-size: 0.9rem; margin-top: 10px; font-style: italic; max-width: 600px; margin-left: auto; margin-right: auto; text-align: left;
+    }
+    #feedback {
+        font-weight:bold; margin-top: 15px;
+    }
+    #feedback strong {
+        color: #FFD700;
+    }
+    .input-field, .textarea-field {
+        width: 100%; max-width: 600px; padding: 10px; margin-top: 15px; border-radius: 5px; border: 1px solid #555; background-color: #333; color: white; font-size: 1rem;
+    }
+    .textarea-field {
+        min-height: 80px; resize: vertical;
+    }
+    .match-container {
+        display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; max-width: 600px; margin: 20px auto; text-align: left;
+    }
+    .match-container input {
+        width: 40px; text-align: center; font-size: 1rem; padding: 5px;
+    }
+    .match-options {
+        grid-column: span 3; border: 1px dashed #444; padding: 10px; border-radius: 8px;
+    }
+    .nav-buttons {
+        margin-top: 20px;
     }
 
-    /* 📱 Responsividade para telas menores */
-    @media (max-width: 600px) {
-        h1 {
-            font-size: 1.5rem;
-        }
-
-        .btn {
-            font-size: 0.9rem;
-            padding: 8px 16px;
-        }
-
-        .option {
-            font-size: 0.95rem;
-            padding: 10px;
-        }
-
-        .explanation {
-            font-size: 0.85rem;
-        }
+    #gabarito {
+        white-space: pre-wrap; text-align: left; max-width: 600px; margin: 20px auto; background-color: #111; padding: 15px; border-radius: 8px;
     }
 </style>
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
-<h1>🎯 Quiz VixGelados</h1>
-<p>Escolha o nível:</p>
-<button class="btn" onclick="startQuiz('facil')">Fácil</button>
-<button class="btn" onclick="startQuiz('medio')">Médio</button>
-<button class="btn" onclick="startQuiz('avancado')">Avançado</button>
-<button class="btn" onclick="startQuiz('apresentacao')">Apresentação</button>
-<button class="btn" onclick="startQuiz('aleatorio')">Aleatório</button>
+<h1>🎯 Quiz de Gestão de Processos</h1>
+
+<div id="menu">
+    <p>Escolha uma categoria para começar:</p>
+    <div class="btn-container">
+        <button class="btn" onclick="startQuiz('conceitos')">Conceitos Básicos (1-10)</button>
+        <button class="btn" onclick="startQuiz('vf')">Verdadeiro/Falso (11-20)</button>
+        <button class="btn" onclick="startQuiz('associacao')">Associação (21-30)</button>
+        <button class="btn" onclick="startQuiz('calculos')">Cálculos (31-40)</button>
+        <button class="btn" onclick="startQuiz('graficos')">Interp. Gráficos (41-50)</button>
+        <button class="btn" onclick="startQuiz('abertas')">Questões Abertas (51-60)</button>
+        <button class="btn" onclick="startQuiz('aleatorio')">Aleatório (10 Questões)</button>
+    </div>
+</div>
+
 
 <div id="quiz" style="display:none; margin-top: 20px;">
     <h2 id="question"></h2>
-    <div id="options"></div>
-    <p id="feedback" style="font-weight:bold; margin-top: 15px;"></p>
+    <div id="question-body"></div>
+    <div class="nav-buttons" id="nav-buttons"></div>
+    <p id="feedback"></p>
     <span id="explanation" class="explanation"></span>
 </div>
 
 <div id="result" style="display:none; margin-top: 20px;">
-    <h2>🏆 Resultado</h2>
+    <h2>🏆 Resultado Final</h2>
     <p id="final-message"></p>
-    <p id="score" style="font-size: 18px; font-weight: bold;"></p>
-    <p id="gabarito" style="white-space: pre-wrap; text-align: left; max-width: 600px; margin: 0 auto;"></p>
-    <button class="btn" onclick="location.reload()">Jogar Novamente</button>
-    <button class="btn" onclick="voltarInicio()">Voltar ao Início</button>
-    <button class="btn" onclick="baixarRelatorio()">Baixar Relatório PDF</button>
+    <p id="score" style="font-size: 1.2rem; font-weight: bold;"></p>
+    <div id="gabarito"></div>
+    <div class="btn-container" style="margin-top:20px;">
+        <button class="btn" onclick="voltarInicio()">Voltar ao Início</button>
+        <button class="btn" onclick="baixarRelatorio()">Baixar Relatório PDF</button>
+    </div>
 </div>
 
 <script>
-const quizzes = {
-    facil: [
-        {pergunta: "Área total da VixGelados:", opcoes: ["1.000 m²", "2.000 m²", "5.000 m²"], resposta: "b", explicacao: "A VixGelados opera em uma área de 2.000 m²."},
-        {pergunta: "Número de colaboradores:", opcoes: ["25", "50", "100"], resposta: "b", explicacao: "A empresa conta com 50 colaboradores."},
-        {pergunta: "Um problema do layout atual é:", opcoes: ["Pouca iluminação", "Fluxo produtivo ineficiente", "Falta de matéria-prima"], resposta: "b", explicacao: "Um dos maiores desafios era o fluxo produtivo ineficiente."},
-        {pergunta: "Tipo de produção predominante:", opcoes: ["Contínua", "Por bateladas", "Sob encomenda"], resposta: "b", explicacao: "A produção é por bateladas, ideal para produtos com variações de sabor."},
-        {pergunta: "Produção MTS significa:", opcoes: ["Produzir para estoque", "Produzir sob encomenda", "Produzir artesanalmente"], resposta: "a", explicacao: "MTS (Make-to-Stock) significa produzir para manter um estoque."},
-        {pergunta: "Produção MTO significa:", opcoes: ["Produzir para estoque", "Produzir sob encomenda", "Produzir por bateladas"], resposta: "b", explicacao: "MTO (Make-to-Order) é a produção sob encomenda."},
-        {pergunta: "Layout escolhido:", opcoes: ["Funcional", "Em linha", "Híbrido"], resposta: "c", explicacao: "O layout híbrido combina a eficiência da linha contínua com a versatilidade das células."},
-        {pergunta: "Armazenamento refrigerado fica:", opcoes: ["Ao lado da moldagem", "Próximo à expedição", "Na recepção"], resposta: "b", explicacao: "O armazenamento refrigerado fica próximo à expedição para facilitar a logística de saída."},
-        {pergunta: "O layout em U ajuda a:", opcoes: ["Reduzir distâncias", "Aumentar distâncias", "Melhorar decoração"], resposta: "a", explicacao: "O layout em U é conhecido por reduzir distâncias e facilitar a comunicação."},
-        {pergunta: "Kanban serve para:", opcoes: ["Regular o fluxo de materiais", "Calcular custos", "Treinar funcionários"], resposta: "a", explicacao: "O Kanban é uma ferramenta visual que ajuda a regular o fluxo de materiais."},
-        {pergunta: "Meta de redução da distância percorrida:", opcoes: ["15%", "25%", "30%"], resposta: "c", explicacao: "Uma das metas do projeto é reduzir em 30% a distância percorrida."},
-        {pergunta: "ROI estimado:", opcoes: ["3 meses", "6 meses", "12 meses"], resposta: "b", explicacao: "O retorno sobre o investimento (ROI) do projeto é esperado em 6 meses."}
+// Objeto com todas as perguntas
+const allQuestions = {
+    conceitos: [
+        { tipo: "mcq", pergunta: "1. O que é um processo?", opcoes: ["Apenas uma etapa de produção", "Um conjunto de atividades que transforma entradas em saídas", "Um documento de qualidade", "Uma máquina industrial"], resposta: "b", explicacao: "Um processo é uma sequência de atividades inter-relacionadas que transformam insumos (entradas) em produtos ou serviços (saídas) com valor agregado." },
+        { tipo: "mcq", pergunta: "2. Qual é a principal função do mapeamento de processos?", opcoes: ["Decorar a fábrica", "Visualizar e melhorar o fluxo de trabalho", "Aumentar o número de funcionários", "Diminuir o salário da equipe"], resposta: "b", explicacao: "O mapeamento de processos cria uma representação visual do fluxo de trabalho, permitindo identificar ineficiências, gargalos e oportunidades de melhoria." },
+        { tipo: "mcq", pergunta: "3. Em qual tipo de produção cada produto é único?", opcoes: ["Massa", "Projeto", "Lote", "Contínua"], resposta: "b", explicacao: "A produção por projeto lida com produtos únicos e complexos, como a construção de um navio ou um software personalizado, onde cada item tem especificações exclusivas." },
+        { tipo: "mcq", pergunta: "4. O que é Lead Time?", opcoes: ["Tempo de montagem", "Tempo total desde a entrada até a saída do processo", "Tempo de folga do funcionário", "Tempo de manutenção"], resposta: "b", explicacao: "Lead Time é o tempo total que um item (ou cliente) leva para percorrer todo o processo, desde o pedido inicial até a entrega final, incluindo esperas." },
+        { tipo: "mcq", pergunta: "5. Qual é a função do SIPOC?", opcoes: ["Calcular custos", "Definir fornecedores, entradas, processo, saídas e clientes", "Escolher fornecedores", "Criar logotipos"], resposta: "b", explicacao: "SIPOC (Supplier, Input, Process, Output, Customer) é uma ferramenta de mapeamento de alto nível que resume um processo, identificando seus elementos-chave." },
+        { tipo: "mcq", pergunta: "6. O que é Takt Time?", opcoes: ["Tempo que o cliente leva para decidir", "Ritmo de produção necessário para atender a demanda", "Tempo de manutenção das máquinas", "Tempo de descanso"], resposta: "b", explicacao: "Takt Time sincroniza a produção com a demanda do cliente. É calculado dividindo o tempo de produção disponível pela demanda do cliente." },
+        { tipo: "mcq", pergunta: "7. Qual é um exemplo de serviço de massa?", opcoes: ["Cirurgia plástica", "Call center de banco", "Consultoria jurídica", "Restaurante de luxo"], resposta: "b", explicacao: "Serviços em massa, como um call center, lidam com alto volume de clientes e processos padronizados, com pouca customização." },
+        { tipo: "mcq", pergunta: "8. Qual é um exemplo de arranjo físico posicional?", opcoes: ["Linha de montagem", "Cirurgia de coração", "Supermercado", "Fábrica de refrigerantes"], resposta: "b", explicacao: "No arranjo físico posicional (ou fixo), o produto/cliente permanece parado, e os recursos (médicos, equipamentos) se movem até ele, como em uma cirurgia complexa." },
+        { tipo: "mcq", pergunta: "9. O que é WIP?", opcoes: ["Trabalho finalizado", "Trabalho em andamento", "Trabalho parado", "Trabalho cancelado"], resposta: "b", explicacao: "WIP (Work In Process) ou Trabalho em Andamento, refere-se a todo o inventário que já entrou no processo produtivo mas ainda não foi finalizado." },
+        { tipo: "mcq", pergunta: "10. Qual é o objetivo do projeto de processos?", opcoes: ["Apenas reduzir custos", "Atender ao cliente com qualidade, rapidez e baixo custo", "Aumentar a complexidade", "Diminuir a variedade de produtos"], resposta: "b", explicacao: "O objetivo do projeto de processos é alinhar as operações para atender às necessidades do cliente de forma eficiente, balanceando qualidade, rapidez, confiabilidade, flexibilidade e custo." }
     ],
-    medio: [
-        {pergunta: "Objetivo do redesenho:", opcoes: ["Melhorar fluxo, ergonomia e integração", "Criar novos sabores", "Aumentar jornada de trabalho"], resposta: "a", explicacao: "O redesenho do layout foca em pontos cruciais: melhoria do fluxo, ergonomia e integração entre setores."},
-        {pergunta: "Produção por bateladas significa:", opcoes: ["Produzir várias pequenas quantidades diferentes", "Produzir grandes quantidades iguais antes da troca", "Produzir sob demanda"], resposta: "b", explicacao: "Produção por bateladas é quando se produz uma grande quantidade de um mesmo produto para só depois mudar o tipo."},
-        {pergunta: "Estratégias produtivas usadas:", opcoes: ["MTS e MTO", "Just-in-time e Kanban", "ETO e Lean"], resposta: "a", explicacao: "A VixGelados utiliza uma combinação de MTS (para o padrão) e MTO (para personalizados)."},
-        {pergunta: "Coexistência de MTS e MTO exige:", opcoes: ["Layout funcional", "Layout híbrido", "Layout em linha"], resposta: "b", explicacao: "A combinação de MTS e MTO exige um layout híbrido."},
-        {pergunta: "Tipo funcional tem como vantagem:", opcoes: ["Alta flexibilidade por processo", "Alta eficiência", "Baixa complexidade gerencial"], resposta: "a", explicacao: "O layout funcional se destaca pela alta flexibilidade."},
-        {pergunta: "Tipo em linha tem como desvantagem:", opcoes: ["Alta flexibilidade", "Baixa flexibilidade", "Necessidade de estoque intermediário"], resposta: "b", explicacao: "A principal desvantagem do layout em linha é a baixa flexibilidade."},
-        {pergunta: "Ordem correta no novo layout:", opcoes: [
-            "Recebimento → Mistura → Pasteurização → Moldagem → Congelamento → Embalagem",
-            "Recebimento → Preparação → Mistura → Pasteurização → Moldagem → Congelamento → Embalagem",
-            "Mistura → Pasteurização → Recebimento → Moldagem"], resposta: "b", explicacao: "A ordem otimizada é Recebimento > Preparação > Mistura > Pasteurização > Moldagem > Congelamento > Embalagem."},
-        {pergunta: "Célula de personalizados:", opcoes: ["Centro da fábrica", "Próxima à pasteurização", "Isolada e flexível"], resposta: "c", explicacao: "A célula de personalizados precisa ser isolada para manter a flexibilidade."},
-        {pergunta: "Servicescape emocional inclui:", opcoes: ["Piso antiderrapante", "Cores e música", "Sinalização"], resposta: "b", explicacao: "O servicescape emocional trata de elementos que afetam o humor e as emoções, como cores e música."},
-        {pergunta: "Servicescape fisiológico inclui:", opcoes: ["Iluminação e ventilação", "Cores e música", "Mapas e sinalização"], resposta: "a", explicacao: "O servicescape fisiológico se refere a fatores que afetam o corpo, como iluminação e ventilação."},
-        {pergunta: "Servicescape cognitivo inclui:", opcoes: ["Sinalização e mapa", "Ventilação", "Música"], resposta: "a", explicacao: "O servicescape cognitivo lida com informações e facilita a orientação, como sinalização e mapas."},
-        {pergunta: "Reduzir resistência às mudanças:", opcoes: ["Treinamentos e comitê", "Aumentar turnos", "Reduzir pausas"], resposta: "a", explicacao: "Treinamentos e a criação de um comitê de mudança são estratégias essenciais para reduzir a resistência dos colaboradores."},
-        {pergunta: "Meta de tempo médio de ciclo:", opcoes: ["Reduzir 10%", "Reduzir 25%", "Reduzir 30%"], resposta: "b", explicacao: "O projeto visa uma redução de 25% no tempo médio do ciclo."},
-        {pergunta: "Custo total do projeto:", opcoes: ["R$ 20.000", "R$ 40.000", "R$ 60.000"], resposta: "b", explicacao: "O custo total do projeto de redesenho é de R$ 40.000."},
-        {pergunta: "ROI do projeto:", opcoes: ["3 meses", "6 meses", "12 meses"], resposta: "b", explicacao: "O ROI do projeto é de 6 meses."}
+    vf: [
+        { tipo: "vf", pergunta: "11. O arranjo físico não afeta o fluxo de produção.", resposta: "F", explicacao: "Falso. O arranjo físico é um dos fatores que mais impactam o fluxo, a eficiência, o tempo de movimentação e a comunicação dentro de uma operação." },
+        { tipo: "vf", pergunta: "12. Takt Time é calculado com base na demanda do cliente.", resposta: "V", explicacao: "Verdadeiro. A fórmula do Takt Time é (Tempo de Produção Disponível) / (Demanda do Cliente), alinhando o ritmo da produção ao ritmo das vendas." },
+        { tipo: "vf", pergunta: "13. Jobbing é ideal para produção em grande escala.", resposta: "F", explicacao: "Falso. Jobbing (ou produção por tarefa) é ideal para baixo volume e alta variedade, com produtos customizados, o oposto da produção em grande escala (massa)." },
+        { tipo: "vf", pergunta: "14. SIPOC é uma ferramenta de mapeamento.", resposta: "V", explicacao: "Verdadeiro. SIPOC é uma ferramenta usada nas fases iniciais de projetos de melhoria para criar um mapa de alto nível do processo." },
+        { tipo: "vf", pergunta: "15. Throughput Rate é a mesma coisa que tempo de ciclo.", resposta: "F", explicacao: "Falso. Tempo de ciclo é o tempo entre a finalização de duas unidades consecutivas (ex: 2 minutos/peça). Throughput Rate (Taxa de Saída) é o inverso (ex: 30 peças/hora)." },
+        { tipo: "vf", pergunta: "16. WIP alto pode indicar gargalo.", resposta: "V", explicacao: "Verdadeiro. Um acúmulo de trabalho em processo (WIP) antes de uma etapa geralmente significa que esta etapa é mais lenta que as anteriores, caracterizando um gargalo." },
+        { tipo: "vf", pergunta: "17. Serviços profissionais são altamente personalizados.", resposta: "V", explicacao: "Verdadeiro. Serviços profissionais (médicos, advogados, consultores) envolvem alto grau de customização e conhecimento para atender necessidades específicas do cliente." },
+        { tipo: "vf", pergunta: "18. Produção em lote é sempre contínua.", resposta: "F", explicacao: "Falso. Produção em lote é intermitente por natureza (produz-se um lote, para, troca-se o setup, produz-se outro). Produção contínua opera 24/7 sem paradas, como em refinarias." },
+        { tipo: "vf", pergunta: "19. Fluxograma mostra apenas o início e fim do processo.", resposta: "F", explicacao: "Falso. Um fluxograma detalha todas as etapas do processo, incluindo operações, decisões, transportes, esperas e inspeções, não apenas o início e o fim." },
+        { tipo: "vf", pergunta: "20. Shouldice Hospital reduziu variabilidade para melhorar o atendimento.", resposta: "V", explicacao: "Verdadeiro. Ao se especializar apenas em cirurgias de hérnia, o Shouldice Hospital padronizou e otimizou seus processos, reduzindo a variabilidade e alcançando resultados de alta qualidade e eficiência." }
     ],
-    avancado: [
-        {pergunta: "Área e colaboradores da VixGelados:", opcoes: ["1.000 m² e 40", "2.000 m² e 50", "5.000 m² e 100"], resposta: "b", explicacao: "A VixGelados tem 2.000 m² de área e 50 colaboradores."},
-        {pergunta: "Produção predominante:", opcoes: ["Contínua", "Por bateladas", "Sob encomenda"], resposta: "b", explicacao: "A produção é majoritariamente por bateladas, mas com um setor de produção sob encomenda."},
-        {pergunta: "MTS significa:", opcoes: ["Produzir para estoque", "Produzir sob encomenda", "Produzir artesanalmente"], resposta: "a", explicacao: "Make-to-Stock significa produzir para formar estoque."},
-        {pergunta: "MTO significa:", opcoes: ["Produzir para estoque", "Produzir sob encomenda", "Produzir por bateladas"], resposta: "b", explicacao: "Make-to-Order, a produção sob encomenda, é a estratégia usada para os pedidos personalizados."},
-        {pergunta: "Layout exigido para MTS+MTO:", opcoes: ["Funcional", "Híbrido", "Celular"], resposta: "b", explicacao: "Um layout híbrido é a melhor solução para combinar a produção em massa com a produção sob encomenda."},
-        {pergunta: "Tipo funcional:", opcoes: ["Flexível, deslocamentos longos", "Alta eficiência", "Volume limitado"], resposta: "a", explicacao: "O layout funcional oferece alta flexibilidade, mas geralmente resulta em deslocamentos mais longos."},
-        {pergunta: "Ordem correta:", opcoes: [
-            "Recebimento → Mistura → Pasteurização → Moldagem → Congelamento → Embalagem",
-            "Recebimento → Preparação → Mistura → Pasteurização → Moldagem → Congelamento → Embalagem",
-            "Mistura → Recebimento → Pasteurização → Embalagem"], resposta: "b", explicacao: "A sequência correta do processo produtivo é crucial para a eficiência, começando no recebimento e terminando na embalagem."},
-        {pergunta: "Local da célula de personalizados:", opcoes: ["Ao lado da pasteurização", "Próxima à recepção", "Isolada e flexível"], resposta: "c", explicacao: "A célula de produção para personalizados deve ser isolada do fluxo principal."},
-        {pergunta: "Layout em U ajuda a:", opcoes: ["Reduzir distâncias e supervisionar", "Aumentar distâncias", "Separar setores"], resposta: "a", explicacao: "O layout em U é ideal para reduzir a movimentação e facilitar a supervisão da equipe."},
-        {pergunta: "Kanban regula fluxo entre:", opcoes: ["Mistura e pasteurização", "Congelamento e embalagem", "Embalagem e armazenamento"], resposta: "c", explicacao: "O Kanban foi implementado entre o congelamento e a embalagem para regular o fluxo de produtos prontos."},
-        {pergunta: "Meta KPIs: tempo de ciclo", opcoes: ["25%", "30%", "15%"], resposta: "a", explicacao: "O objetivo é reduzir em 25% o tempo de ciclo médio."},
-        {pergunta: "Meta KPIs: distância percorrida", opcoes: ["25%", "30%", "40%"], resposta: "b", explicacao: "A meta é diminuir em 30% a distância que os produtos e colaboradores percorrem."},
-        {pergunta: "Meta KPIs: entregas no prazo", opcoes: ["90%", "95%", "85%"], resposta: "b", explicacao: "O objetivo é aumentar a taxa de entregas no prazo para 95%."},
-        {pergunta: "Custo total:", opcoes: ["R$ 40.000", "R$ 60.000", "R$ 25.000"], resposta: "a", explicacao: "O custo total do projeto foi de R$ 40.000."},
-        {pergunta: "ROI:", opcoes: ["3 meses", "6 meses", "12 meses"], resposta: "b", explicacao: "O retorno sobre o investimento foi estimado em 6 meses."}
+    associacao: [
+        { 
+            tipo: "match", 
+            pergunta: "21-25. Ligue a coluna A (Tipo de Processo) com a coluna B (Exemplo).",
+            colunaA: ["21. Projeto", "22. Jobbing", "23. Lote", "24. Massa", "25. Contínua"],
+            colunaB: ["(a) Fábrica de refrigerantes", "(b) Restaurante de luxo", "(c) Consultoria de engenharia", "(d) Construção de um navio", "(e) Refinaria de petróleo"],
+            respostas: { "21": "d", "22": "b", "23": "a", "24": "c", "25": "e" },
+            explicacao: "Projeto: item único (navio). Jobbing: alta customização, baixo volume (restaurante). Lote: produção em bateladas (refrigerantes). Massa: alto volume, padronizado (consultoria pode ser, mas o exemplo de call center é melhor). Contínua: fluxo ininterrupto (refinaria)."
+        },
+        { 
+            tipo: "match", 
+            pergunta: "26-30. Ligue a coluna A (Tipo de Serviço/Arranjo) com a coluna B (Exemplo).",
+            colunaA: ["26. Serviço profissional", "27. Serviço em massa", "28. Serviço de loja", "29. Arranjo posicional", "30. Arranjo em linha"],
+            colunaB: ["(f) Call center", "(g) Alfaiate sob medida", "(h) Hospital de hérnia Shouldice", "(i) Montadora de automóveis", "(j) Supermercado"],
+            respostas: { "26": "g", "27": "f", "28": "j", "29": "h", "30": "i" },
+            explicacao: "Serviço Profissional: alta customização (alfaiate). Serviço em Massa: padronizado (call center). Serviço de Loja: mix de produtos e clientes (supermercado). Arranjo Posicional: produto fixo (cirurgia no Shouldice). Arranjo em Linha: sequência fixa (montadora)."
+        }
     ],
-    apresentacao: [
-        {pergunta: "Qual é o principal problema do layout produtivo atual da VixGelados?", opcoes: ["Falta de maquinário moderno", "Fluxo ineficiente e fadiga dos colaboradores", "Alto custo de matéria-prima"], resposta: "b", explicacao: "O relatório aponta que o layout funcional obsoleto causa fluxo produtivo ineficiente, retrabalhos e fadiga física nos colaboradores."},
-        {pergunta: "Qual o tipo de produção predominante na VixGelados?", opcoes: ["Produção contínua", "Produção por bateladas", "Produção sob encomenda (MTO)"], resposta: "b", explicacao: "A empresa utiliza a produção por bateladas, onde grandes lotes de um produto são feitos antes de mudar para outro sabor ou formato."},
-        {pergunta: "As duas estratégias produtivas utilizadas na VixGelados são:", opcoes: ["Just-in-time e Kanban", "Make-to-stock (MTS) e Make-to-order (MTO)", "Lean Manufacturing e ETO"], resposta: "b", explicacao: "A VixGelados usa o MTS para produtos padrão (produção para estoque) e MTO para sobremesas personalizadas (produção sob encomenda)."},
-        {pergunta: "O que torna o layout híbrido a melhor escolha para a VixGelados?", opcoes: ["É o mais barato para implementar", "Combina a eficiência da linha com a flexibilidade de células", "É mais simples de gerenciar"], resposta: "b", explicacao: "O layout híbrido é ideal para a VixGelados porque permite atender simultaneamente a demanda de alto volume (MTS) e de alta variedade (MTO)."},
-        {pergunta: "Qual a sequência correta da área de produção no novo layout?", opcoes: ["Mistura → Pasteurização → Congelamento", "Recebimento → Preparação → Mistura → Pasteurização", "Embalagem → Armazenamento → Expedição"], resposta: "b", explicacao: "A sequência otimizada de produção no novo layout começa com o recebimento de matéria-prima, seguido pela preparação, mistura e pasteurização."},
-        {pergunta: "Como a proposta de layout em U contribui para a produção?", opcoes: ["Aumenta o espaço de trabalho", "Reduz distâncias e facilita a supervisão", "Cria mais postos de trabalho"], resposta: "b", explicacao: "O layout em U aproxima o início e o fim da linha de produção, o que reduz distâncias de movimentação e facilita a supervisão do processo."},
-        {pergunta: "Qual a função do sistema puxado com Kanban na VixGelados?", opcoes: ["Controlar o recebimento de matéria-prima", "Regular o fluxo entre a embalagem e o armazenamento", "Gerenciar a produção sob encomenda"], resposta: "b", explicacao: "O Kanban é usado para regular o fluxo de produtos acabados, evitando o acúmulo de estoque entre a embalagem e o armazenamento."},
-        {pergunta: "Qual das opções abaixo é uma aplicação da dimensão cognitiva do Servicescape?", opcoes: ["Música ambiente", "Piso antiderrapante", "Sinalização clara e mapa de fluxo"], resposta: "c", explicacao: "A dimensão cognitiva do servicescape é voltada para a informação e orientação do cliente e colaborador, como sinalização e mapas."},
-        {pergunta: "Qual a principal estratégia para mitigar a resistência dos colaboradores às mudanças?", opcoes: ["Aumentar o salário", "Fazer treinamentos e criar um comitê de mudanças", "Reduzir o quadro de funcionários"], resposta: "b", explicacao: "O relatório sugere que a melhor forma de mitigar a resistência é envolver os colaboradores no processo através de treinamentos e da criação de um comitê."},
-        {pergunta: "De acordo com os KPIs, qual a meta de redução da distância percorrida e de aumento nas entregas no prazo?", opcoes: ["30% e 95%", "25% e 90%", "30% e 85%"], resposta: "a", explicacao: "As metas de KPIs são a redução de 30% na distância percorrida e o aumento para 95% na taxa de entregas no prazo."},
-        {pergunta: "O custo total do projeto de redesenho e o ROI estimado são:", opcoes: ["R$ 20.000 e 3 meses", "R$ 40.000 e 6 meses", "R$ 60.000 e 12 meses"], resposta: "b", explicacao: "O custo total estimado do projeto é R$ 40.000, com um retorno sobre o investimento (ROI) de aproximadamente 6 meses."}
+    calculos: [
+        { tipo: "calc", pergunta: "31. Uma fábrica produz 240 peças em 8 horas. Qual é a taxa de atravessamento (throughput rate) em peças por hora?", resposta: "30", explicacao: "A taxa de atravessamento é a produção total dividida pelo tempo. Cálculo: 240 peças / 8 horas = 30 peças/hora.", hint: "Divida o número total de peças pelo número total de horas." },
+        { tipo: "calc", pergunta: "32. Se o tempo de ciclo é 2 minutos, quantas peças são produzidas por hora?", resposta: "30", explicacao: "Uma hora tem 60 minutos. Se uma peça leva 2 minutos, em uma hora são produzidas: 60 minutos / 2 minutos/peça = 30 peças.", hint: "Quantas vezes o 'tempo de ciclo' de 2 minutos cabe em 60 minutos (1 hora)?" },
+        { tipo: "calc", pergunta: "33. Uma linha tem 30 peças em processo (WIP) e uma taxa de saída (throughput) de 10 peças/hora. Qual o Lead Time em horas? (Lei de Little)", resposta: "3", explicacao: "Pela Lei de Little, Lead Time = WIP / Taxa de Saída. Cálculo: 30 peças / 10 peças/hora = 3 horas.", hint: "Lembre-se da Lei de Little: Inventário (WIP) = Taxa de Saída × Lead Time. Isole o Lead Time." },
+        { tipo: "calc", pergunta: "34. Se a demanda é de 600 peças por dia (8h de trabalho = 480 min), qual deve ser o Takt Time em minutos por peça?", resposta: "0.8", explicacao: "Takt Time = Tempo Disponível / Demanda. Cálculo: 480 minutos / 600 peças = 0.8 minutos/peça (ou 48 segundos/peça).", hint: "A fórmula é o tempo total disponível (em minutos) dividido pela demanda total." },
+        { tipo: "calc", pergunta: "35. Um processo tem 4 estágios com tempos: 5 min, 3 min, 4 min, 5 min. Qual é o tempo do gargalo em minutos?", resposta: "5", explicacao: "O gargalo é a etapa mais lenta do processo, que limita a capacidade total. Neste caso, as duas etapas de 5 minutos são o gargalo.", hint: "O gargalo é simplesmente a etapa que leva mais tempo para ser concluída." },
+        { tipo: "calc", pergunta: "36. No exemplo acima (5, 3, 4, 5 min), qual é o tempo de ciclo do processo em minutos?", resposta: "5", explicacao: "O tempo de ciclo de um processo sequencial é determinado pelo seu gargalo. Portanto, o tempo de ciclo é de 5 minutos.", hint: "O tempo de ciclo de um processo inteiro é sempre igual ao tempo do seu gargalo (a etapa mais lenta)." },
+        { tipo: "calc", pergunta: "37. Uma empresa tem 1.200 pedidos por semana (40h de trabalho). Qual o tempo de ciclo necessário em minutos por pedido?", resposta: "2", explicacao: "Tempo disponível = 40 horas * 60 min/h = 2400 minutos. Tempo de ciclo = Tempo / Pedidos. Cálculo: 2400 min / 1200 pedidos = 2 minutos/pedido.", hint: "Primeiro, converta as 40 horas de trabalho em minutos. Depois, divida esse total pelo número de pedidos." },
+        { tipo: "calc", pergunta: "38. Se cada operário leva 15 minutos para processar um pedido e o tempo de ciclo alvo é de 3 minutos, quantos operários são necessários?", resposta: "5", explicacao: "Número de operários = Tempo total da tarefa / Takt Time (ou tempo de ciclo alvo). Cálculo: 15 minutos / 3 minutos = 5 operários.", hint: "Divida o tempo que um único operário leva pela cadência que a linha precisa ter (o tempo de ciclo alvo)." },
+        { tipo: "calc", pergunta: "39. Um hospital tem 50 pacientes em espera (WIP) e o tempo de atendimento é de 12 minutos (Tempo de Ciclo). Qual o Lead Time em minutos?", resposta: "600", explicacao: "Pela Lei de Little: Lead Time = WIP * Tempo de Ciclo. Cálculo: 50 pacientes * 12 minutos/paciente = 600 minutos (ou 10 horas).", hint: "Use uma variação da Lei de Little: Lead Time = Itens no sistema (WIP) × Tempo de Ciclo." },
+        { tipo: "calc", pergunta: "40. Reduzindo o Takt Time de 4 para 2 minutos, o que acontece com a capacidade de produção? (Digite 'dobra', 'cai pela metade' ou 'não muda')", resposta: "dobra", explicacao: "Reduzir o Takt Time pela metade significa que você precisa produzir no dobro da velocidade para atender a uma demanda maior. Portanto, a produção dobra.", hint: "Se o tempo para fazer uma peça cai pela metade, o que acontece com a quantidade que você pode fazer na mesma hora?" }
+    ],
+    graficos: [
+        { tipo: "mcq", pergunta: "41. Em um fluxograma com 8 operações, 4 transportes e 2 atrasos, qual é a atividade que mais representa 'não agregação de valor'?", opcoes: ["Operações", "Transportes e atrasos", "Apenas operações", "Nenhuma"], resposta: "b", explicacao: "Transportes e atrasos (esperas) são exemplos clássicos de atividades que não agregam valor ao produto final sob a perspectiva do cliente." },
+        { tipo: "mcq", pergunta: "42. Em um diagrama SIPOC, o que representa a letra 'C'?", opcoes: ["Custo", "Capacidade", "Cliente (Customer)", "Ciclo"], resposta: "c", explicacao: "'C' em SIPOC significa Customer (Cliente), que é quem recebe a saída (Output) do processo." },
+        { tipo: "mcq", pergunta: "43. Em um Turtle Diagram (Diagrama Tartaruga), o que está no centro (no casco da tartaruga)?", opcoes: ["Entradas e Saídas", "O Processo", "Recursos", "Métricas"], resposta: "b", explicacao: "O centro do Diagrama Tartaruga representa o Processo em si, com suas etapas principais. As 'patas' e a 'cabeça/rabo' representam os outros elementos (inputs, outputs, recursos, etc)." },
+        { tipo: "mcq", pergunta: "44. Em um mapa de fluxo de valor (VSM), o que uma seta pontilhada geralmente indica?", opcoes: ["Fluxo de material", "Fluxo de informação", "Movimento do operador", "Direção da produção"], resposta: "b", explicacao: "No VSM, setas contínuas normalmente mostram o fluxo de materiais, enquanto setas pontilhadas indicam o fluxo de informações (pedidos, programações, etc.)." },
+        { tipo: "mcq", pergunta: "45. Em um gráfico de utilização vs. tempo de espera, o que acontece com o tempo de espera quando a utilização se aproxima de 100%?", opcoes: ["Diminui", "Não se altera", "Aumenta exponencialmente", "Torna-se zero"], resposta: "c", explicacao: "Pela Teoria das Filas, à medida que a utilização de um recurso se aproxima de 100%, a variabilidade do sistema faz com que as filas (e o tempo de espera) cresçam exponencialmente." },
+        { tipo: "mcq", pergunta: "46. Em um diagrama de precedência, o que as setas indicam?", opcoes: ["O custo da atividade", "A ordem em que as atividades devem ser feitas", "Quem é o responsável", "O tempo da atividade"], resposta: "b", explicacao: "As setas em um diagrama de precedência mostram as dependências e a sequência lógica entre as tarefas de um projeto ou processo." },
+        { tipo: "mcq", pergunta: "47. Em um layout funcional (por processo), como os recursos são agrupados?", opcoes: ["Por produto", "Por tipo de função ou equipamento", "Em uma linha reta", "De forma aleatória"], resposta: "b", explicacao: "No layout funcional, máquinas e habilidades similares são agrupadas em departamentos (ex: setor de solda, setor de pintura), oferecendo alta flexibilidade." },
+        { tipo: "mcq", pergunta: "48. Em um layout celular, o que é uma 'célula'?", opcoes: ["Uma sala de descanso", "Um grupo de máquinas e pessoas dedicadas a uma família de produtos", "Um único equipamento grande", "O escritório do gerente"], resposta: "b", explicacao: "Uma célula de manufatura agrupa diferentes tipos de máquinas e operadores para produzir uma família de peças com requisitos de processamento semelhantes, combinando a eficiência da linha com a flexibilidade do layout funcional." },
+        { tipo: "mcq", pergunta: "49. Em um layout em linha, o que define a sequência de trabalho?", opcoes: ["A preferência do operador", "A sequência de montagem do produto", "A disponibilidade de máquinas", "O custo dos materiais"], resposta: "b", explicacao: "O layout em linha é organizado estritamente de acordo com os passos sequenciais necessários para fabricar o produto." },
+        { tipo: "mcq", pergunta: "50. Em um layout posicional (fixo), o que permanece fixo?", opcoes: ["Os trabalhadores", "As ferramentas", "O produto ou cliente sendo trabalhado", "O gerente"], resposta: "c", explicacao: "No layout posicional, o produto (ex: avião, navio) ou cliente (ex: paciente em cirurgia) fica em um local fixo, e todos os recursos necessários se movem até ele." }
+    ],
+    abertas: [
+        { tipo: "open", pergunta: "51. Explique com suas palavras o que é Takt Time e por que é importante.", resposta: ["ritmo", "demanda", "cliente", "sincronizar", "cadência"], explicacao: "Takt Time é o ritmo (ou cadência) que a produção precisa seguir para atender exatamente a demanda do cliente. É crucial porque sincroniza a fábrica com o mercado, evitando superprodução e falta de estoque.", hint: "Sua resposta deve conectar as palavras 'ritmo', 'produção' e 'demanda do cliente'." },
+        { tipo: "open", pergunta: "52. Por que o Shouldice Hospital é um exemplo de redução de variabilidade?", resposta: ["especializou", "hérnia", "padronizou", "foco", "repetição"], explicacao: "O Shouldice Hospital reduziu drasticamente a variabilidade ao se especializar em um único procedimento (reparo de hérnia). Esse foco permitiu padronizar técnicas, treinar equipes e otimizar cada etapa, resultando em alta eficiência e qualidade previsível.", hint: "O segredo deles foi o 'foco'. O que acontece quando você faz a mesma coisa repetidamente e se especializa nisso?" },
+        { tipo: "open", pergunta: "53. Diferencie tempo de ciclo de lead time.", resposta: ["ciclo", "frequência", "unidade", "lead", "total", "jornada", "espera"], explicacao: "Tempo de Ciclo é a frequência com que uma unidade é finalizada (ex: 1 peça a cada 2 minutos). Lead Time é o tempo total da jornada do produto, desde o pedido até a entrega, incluindo todo o tempo de processamento e, crucialmente, os tempos de espera.", hint: "Um mede a 'frequência' de saída de um produto, o outro mede a 'jornada completa', incluindo as esperas." },
+        { tipo: "open", pergunta: "54. Por que o mapeamento de processos ajuda a encontrar gargalos?", resposta: ["visualizar", "fluxo", "etapas", "lenta", "acúmulo", "wip"], explicacao: "O mapeamento torna o fluxo de trabalho visível. Ao analisar o mapa, é possível identificar etapas onde o trabalho se acumula (alto WIP) ou cujo tempo de processamento é significativamente maior que os outros. Esses pontos são os gargalos que limitam a capacidade de todo o sistema.", hint: "Pense em como um mapa de trânsito te ajuda a 'ver' o congestionamento. Onde o 'trabalho' (WIP) se acumula no fluxo?" },
+        { tipo: "open", pergunta: "55. Explique como o arranjo físico afeta a eficiência de um hospital.", resposta: ["distância", "fluxo", "paciente", "equipamento", "comunicação", "tempo"], explicacao: "Um bom arranjo físico em um hospital minimiza a distância que pacientes e funcionários precisam percorrer, otimiza o fluxo de exames e procedimentos, posiciona equipamentos de emergência em locais estratégicos e melhora a comunicação entre equipes, reduzindo tempos de espera e aumentando a segurança.", hint: "Pense em 'distâncias'. Como a proximidade entre a sala de emergência e a radiologia afeta o tempo de atendimento?" },
+        { tipo: "open", pergunta: "56. Dê um exemplo de serviço profissional e serviço em massa.", resposta: ["profissional", "advogado", "consultor", "médico", "arquiteto", "massa", "call center", "fast food", "banco"], explicacao: "Serviço Profissional: consultoria jurídica, onde há alta customização e interação. Serviço em Massa: um call center de um banco, que lida com alto volume de solicitações padronizadas e baixo tempo de contato.", hint: "Pense em 'customização vs. padronização'. Um é altamente personalizado e o outro é de alto volume e repetitivo." },
+        { tipo: "open", pergunta: "57. Como o volume e a variedade afetam o tipo de processo escolhido?", resposta: ["volume", "variedade", "matriz", "projeto", "jobbing", "lote", "massa"], explicacao: "A relação volume-variedade é fundamental (Matriz Produto-Processo). Baixo volume e alta variedade levam a processos flexíveis como Projeto ou Jobbing. Alto volume e baixa variedade favorecem processos eficientes como Massa ou Contínuo. Processos em Lote ficam no meio termo.", hint: "Lembre-se da matriz produto-processo. O que acontece nos extremos (canto superior esquerdo vs. canto inferior direito da matriz)?" },
+        { tipo: "open", pergunta: "58. Explique por que a padronização de processos é importante na saúde.", resposta: ["segurança", "erro", "qualidade", "previsibilidade", "eficiência", "treinamento"], explicacao: "A padronização na saúde (ex: checklists de cirurgia) é vital para reduzir erros médicos, garantir um nível consistente de qualidade no atendimento, aumentar a segurança do paciente, facilitar o treinamento de novos profissionais e melhorar a eficiência geral.", hint: "A palavra-chave é 'redução de erros'. Como a padronização ajuda a garantir a 'segurança' do paciente?" },
+        { tipo: "open", pergunta: "59. Como o Changi Airport usa tecnologia para melhorar o fluxo de passageiros?", resposta: ["automação", "biometria", "reconhecimento facial", "check-in", "autoatendimento", "bagagem"], explicacao: "O Aeroporto de Changi utiliza automação extensiva, com quiosques de check-in e despacho de bagagem de autoatendimento, além de biometria e reconhecimento facial para o controle de passaporte, tornando o fluxo de passageiros mais rápido, fluido e com menos filas.", hint: "Concentre-se em como o passageiro interage com o aeroporto sem precisar de funcionários. Pense em 'autoatendimento' e 'biometria'." },
+        { tipo: "open", pergunta: "60. Qual é a relação entre flexibilidade e custo na matriz produto-processo?", resposta: ["flexibilidade", "custo", "inversamente", "trade-off", "projeto", "contínuo"], explicacao: "Geralmente, há um trade-off: processos muito flexíveis (como Projeto), capazes de lidar com alta variedade, tendem a ter um custo unitário mais alto. Processos muito eficientes e de baixo custo (como Contínuo) são rígidos e possuem baixa flexibilidade. A relação é, na maioria das vezes, inversamente proporcional.", hint: "É uma relação de 'trade-off'. Para ganhar mais em um (flexibilidade), você geralmente perde no outro (custo). Eles são proporcionais ou inversos?" }
     ]
 };
 
-let perguntas = [];
-let indice = 0;
+let activeQuestions = [];
+let currentIndex = 0;
 let score = 0;
-let gabarito = [];
+let userAnswers = [];
 
-function startQuiz(nivel) {
+function startQuiz(category) {
+    document.getElementById("menu").style.display = "none";
     document.getElementById("quiz").style.display = "block";
     document.getElementById("result").style.display = "none";
-    document.querySelectorAll("button.btn").forEach(b => {
-        if (!b.onclick.toString().includes("startQuiz")) {
-            b.style.display = "none";
-        }
-    });
 
-    if (nivel === "aleatorio") {
-        perguntas = [...quizzes.facil, ...quizzes.medio, ...quizzes.avancado, ...quizzes.apresentacao].sort(() => Math.random() - 0.5).slice(0, 10);
+    if (category === "aleatorio") {
+        const all = [].concat(...Object.values(allQuestions));
+        activeQuestions = all.sort(() => 0.5 - Math.random()).slice(0, 10);
     } else {
-        perguntas = [...quizzes[nivel]];
+        activeQuestions = [...allQuestions[category]];
     }
-    indice = 0;
+
+    currentIndex = 0;
     score = 0;
-    gabarito = [];
-    mostrarPergunta();
+    userAnswers = [];
+    displayQuestion();
 }
 
-function mostrarPergunta() {
-    let q = perguntas[indice];
-    document.getElementById("question").innerText = q.pergunta;
+function displayQuestion() {
+    if (currentIndex < activeQuestions.length) {
+        const q = activeQuestions[currentIndex];
+        document.getElementById("question").innerText = q.pergunta;
+        const body = document.getElementById("question-body");
+        const nav = document.getElementById("nav-buttons");
+        
+        body.innerHTML = "";
+        nav.innerHTML = "";
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("explanation").innerText = "";
+
+        switch (q.tipo) {
+            case "mcq":
+            case "vf":
+                renderMCQ(q, body);
+                break;
+            case "match":
+                renderMatch(q, body, nav);
+                break;
+            case "calc":
+            case "open":
+                renderOpen(q, body, nav);
+                break;
+        }
+    } else {
+        showResult();
+    }
+}
+
+function renderMCQ(q, container) {
     let optionsHTML = "";
-    q.opcoes.forEach((op, i) => {
-        optionsHTML += `<div class="option" onclick="responder('${String.fromCharCode(97+i)}', this)">${String.fromCharCode(97+i)}) ${op}</div>`;
+    const options = q.tipo === 'vf' ? ["Verdadeiro", "Falso"] : q.opcoes;
+    options.forEach((op, i) => {
+        const value = q.tipo === 'vf' ? (i === 0 ? 'V' : 'F') : String.fromCharCode(97 + i);
+        optionsHTML += `<div class="option" onclick="checkMCQAnswer('${value}', this)">${q.tipo === 'mcq' ? value + ') ' : ''}${op}</div>`;
     });
-    document.getElementById("options").innerHTML = optionsHTML;
-    document.getElementById("feedback").innerText = "";
-    document.getElementById("explanation").innerText = "";
+    container.innerHTML = optionsHTML;
 }
 
-function responder(resposta, el) {
-    let correta = perguntas[indice].resposta;
-    let opcoesDOM = document.querySelectorAll(".option");
+function renderMatch(q, container, navContainer) {
+    let html = `<div class="match-options"><strong>Opções:</strong><br>${q.colunaB.join(" | ")}</div>`;
+    html += '<div class="match-container">';
+    q.colunaA.forEach((item, index) => {
+        const key = Object.keys(q.respostas)[index];
+        html += `<div>${item}</div> <div>( <input type="text" id="match-input-${key}" maxlength="1" /> )</div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    navContainer.innerHTML = `<button class="btn" onclick="checkMatchAnswer()">Verificar Resposta</button>`;
+}
 
-    opcoesDOM.forEach(opt => opt.style.pointerEvents = "none");
+function renderOpen(q, container, navContainer) {
+    if (q.tipo === 'open') {
+        container.innerHTML = `<textarea id="open-input" class="textarea-field" placeholder="Digite sua resposta aqui..."></textarea>`;
+    } else {
+        container.innerHTML = `<input type="text" id="open-input" class="input-field" placeholder="Digite sua resposta aqui...">`;
+    }
+    navContainer.innerHTML = `<button class="btn" onclick="checkOpenAnswer()">Verificar Resposta</button>`;
+}
 
-    if (resposta === correta) {
-        el.classList.add("correct");
+function checkMCQAnswer(answer, element) {
+    const q = activeQuestions[currentIndex];
+    const isCorrect = answer.toLowerCase() === q.resposta.toLowerCase();
+    
+    document.querySelectorAll(".option").forEach(opt => opt.style.pointerEvents = "none");
+
+    if (isCorrect) {
+        element.classList.add("correct");
         document.getElementById("feedback").innerText = "✅ Correto!";
         score++;
     } else {
-        el.classList.add("wrong");
+        element.classList.add("wrong");
         document.getElementById("feedback").innerText = `❌ Errado!`;
-        opcoesDOM.forEach(opt => {
-            if (opt.innerText.startsWith(correta + ")")) {
+        document.querySelectorAll(".option").forEach(opt => {
+            const optText = q.tipo === 'vf' ? (opt.innerText.startsWith("Verdadeiro") ? 'V' : 'F') : opt.innerText.substring(0, 1);
+            if (optText.toLowerCase() === q.resposta.toLowerCase()) {
                 opt.classList.add("correct");
             }
         });
     }
 
-    // Exibe a explicação
-    document.getElementById("explanation").innerText = perguntas[indice].explicacao;
-
-    gabarito.push(correta);
-
-    setTimeout(() => {
-        indice++;
-        if (indice < perguntas.length) {
-            mostrarPergunta();
-        } else {
-            mostrarResultado();
-        }
-    }, 4000); // Aumenta o tempo para a explicação ser lida
+    userAnswers.push({ question: q.pergunta, userAnswer: answer, correctAnswer: q.explicacao, isCorrect: isCorrect });
+    showExplanationAndProceed();
 }
 
-function mostrarResultado() {
+function checkMatchAnswer() {
+    const q = activeQuestions[currentIndex];
+    let allCorrect = true;
+    let givenAnswers = {};
+
+    Object.keys(q.respostas).forEach(key => {
+        const input = document.getElementById(`match-input-${key}`);
+        const userAnswer = input.value.toLowerCase();
+        givenAnswers[key] = userAnswer;
+        if (userAnswer !== q.respostas[key]) {
+            allCorrect = false;
+            input.classList.add("wrong");
+        } else {
+            input.classList.add("correct");
+        }
+        input.disabled = true;
+    });
+
+    document.getElementById("feedback").innerText = allCorrect ? "✅ Correto!" : "❌ Resposta(s) incorreta(s)!";
+    if (allCorrect) score++;
+    
+    userAnswers.push({ question: q.pergunta, userAnswer: JSON.stringify(givenAnswers), correctAnswer: q.explicacao, isCorrect: allCorrect });
+    showExplanationAndProceed();
+}
+
+function checkOpenAnswer() {
+    const q = activeQuestions[currentIndex];
+    const input = document.getElementById("open-input");
+    const userAnswer = input.value.trim().toLowerCase();
+    let isCorrect = false;
+
+    if (q.tipo === 'calc') {
+        const userNum = userAnswer.replace(",", ".");
+        isCorrect = userNum === q.resposta.toLowerCase();
+    } else { // 'open'
+        let keywordsFound = 0;
+        q.resposta.forEach(keyword => {
+            if (userAnswer.includes(keyword)) {
+                keywordsFound++;
+            }
+        });
+        isCorrect = keywordsFound >= (q.resposta.length * 0.6);
+    }
+    
+    if (isCorrect) {
+        input.disabled = true;
+        input.classList.remove("wrong");
+        input.classList.add("correct");
+        document.getElementById("feedback").innerHTML = "✅ <strong>Correto!</strong>";
+        
+        const alreadyAnswered = userAnswers.some(ans => ans.question === q.pergunta);
+        if (!alreadyAnswered) {
+            score++;
+            userAnswers.push({ question: q.pergunta, userAnswer: input.value, correctAnswer: q.explicacao, isCorrect: true });
+        }
+        
+        showExplanationAndProceed();
+
+    } else {
+        document.getElementById("feedback").innerHTML = `❌ Quase lá! <br><strong>Dica:</strong> ${q.hint}`;
+        input.classList.add("wrong");
+        
+        setTimeout(() => {
+            input.classList.remove("wrong");
+        }, 600);
+    }
+}
+
+function showExplanationAndProceed() {
+    const q = activeQuestions[currentIndex];
+    document.getElementById("explanation").innerText = `Explicação: ${q.explicacao}`;
+    const nav = document.getElementById("nav-buttons");
+    const checkButton = nav.querySelector('button');
+    if(checkButton) checkButton.style.display = 'none';
+
+    nav.innerHTML = `<button class="btn" onclick="nextQuestion()">Próxima Pergunta</button>`;
+}
+
+function nextQuestion() {
+    currentIndex++;
+    displayQuestion();
+}
+
+function showResult() {
     document.getElementById("quiz").style.display = "none";
     document.getElementById("result").style.display = "block";
-    document.querySelectorAll("button.btn").forEach(b => b.style.display = "inline-block");
+    
+    const total = activeQuestions.length;
+    let finalMessage = "";
+    const percentage = (score / total);
 
-    let totalPerguntas = perguntas.length;
-    let mensagemFinal = "";
-
-    if (score / totalPerguntas >= 0.8) {
-        mensagemFinal = "🏆 Uau, você é um verdadeiro especialista! Seu conhecimento está afiado!";
-    } else if (score / totalPerguntas >= 0.5) {
-        mensagemFinal = "🎉 Ótimo trabalho! Você tem uma boa base, mas sempre dá para aprender mais!";
+    if (percentage >= 0.8) {
+        finalMessage = "🏆 Uau, você é um especialista! Parabéns!";
+    } else if (percentage >= 0.5) {
+        finalMessage = "🎉 Bom trabalho! Você está no caminho certo!";
     } else {
-        mensagemFinal = "🙂 Não desanime! O aprendizado é um processo contínuo. Tente o quiz novamente!";
+        finalMessage = "🙂 Não desanime! Continue estudando e tente novamente!";
     }
 
-    document.getElementById("final-message").innerText = mensagemFinal;
-    document.getElementById("score").innerText = `Você acertou ${score} de ${perguntas.length} perguntas.`;
-
-    let textoGabarito = "";
-    perguntas.forEach((p, i) => {
-        let letra = gabarito[i];
-        let indexResposta = letra.charCodeAt(0) - 97;
-        let respostaCerta = p.opcoes[indexResposta];
-        textoGabarito += `${i + 1}. ${p.pergunta}\nResposta correta (${letra}): ${respostaCerta}\n${p.explicacao}\n\n`;
+    document.getElementById("final-message").innerText = finalMessage;
+    document.getElementById("score").innerText = `Você acertou ${score} de ${total} perguntas.`;
+    
+    let gabaritoHTML = "<h3>Gabarito Detalhado</h3>";
+    activeQuestions.forEach((q, i) => {
+        const userAnswerData = userAnswers.find(ans => ans.question === q.pergunta) || { userAnswer: "[Não respondida ou pulada]", isCorrect: false };
+        const status = userAnswerData.isCorrect ? "✅" : "❌";
+        gabaritoHTML += `<p style="padding-bottom: 10px; border-bottom: 1px solid #333;"><strong>${q.pergunta}</strong><br>
+        <span style="color: ${userAnswerData.isCorrect ? '#28a745' : '#dc3545'};">Sua resposta: ${userAnswerData.userAnswer} ${status}</span><br>
+        <i><strong>Justificativa:</strong> ${q.explicacao}</i></p>`;
     });
-    document.getElementById("gabarito").innerText = textoGabarito;
+    document.getElementById("gabarito").innerHTML = gabaritoHTML;
 }
 
 function voltarInicio() {
     document.getElementById("result").style.display = "none";
-    document.getElementById("quiz").style.display = "none";
-    document.getElementById("feedback").innerText = "";
-    document.getElementById("explanation").innerText = "";
-    document.querySelectorAll("button.btn").forEach(b => {
-        if (b.onclick.toString().includes("startQuiz")) {
-            b.style.display = "inline-block";
-        } else {
-            b.style.display = "none";
-        }
-    });
-    indice = 0;
-    score = 0;
-    gabarito = [];
+    document.getElementById("menu").style.display = "block";
 }
 
 function baixarRelatorio() {
@@ -341,34 +465,33 @@ function baixarRelatorio() {
     const pageWidth = doc.internal.pageSize.getWidth();
     let y = 20;
 
-    doc.setFontSize(22);
-    doc.text("Relatório Quiz VixGelados", pageWidth / 2, y, { align: "center" });
-    y += 20;
-
+    doc.setFontSize(20);
+    doc.text("Relatório - Quiz de Gestão de Processos", pageWidth / 2, y, { align: 'center' });
+    y += 15;
+    
     doc.setFontSize(16);
-    doc.text(`Pontuação Final: ${score} de ${perguntas.length}`, pageWidth / 2, y, { align: "center" });
+    doc.text(`Pontuação: ${score} de ${activeQuestions.length}`, pageWidth / 2, y, { align: 'center' });
     y += 20;
-
+    
     doc.setFontSize(12);
-    doc.text("Gabarito Completo:", 10, y);
-    y += 10;
+    
+    userAnswers.forEach((answer, i) => {
+        const q = activeQuestions.find(q => q.pergunta === answer.question);
+        const status = answer.isCorrect ? "Correta" : "Incorreta";
+        let textBlock = `Pergunta ${i + 1}: ${q.pergunta}\n`;
+        textBlock += `Sua resposta: ${answer.userAnswer} (${status})\n`;
+        textBlock += `Justificativa/Resposta esperada: ${q.explicacao}\n\n`;
 
-    perguntas.forEach((p, i) => {
-        let letra = gabarito[i];
-        let indexResposta = letra.charCodeAt(0) - 97;
-        let respostaCerta = p.opcoes[indexResposta];
-        let textoPergunta = `Pergunta ${i + 1}: ${p.pergunta}\nResposta correta (${letra}): ${respostaCerta}\nExplicação: ${p.explicacao}\n\n`;
-        
-        const lines = doc.splitTextToSize(textoPergunta, 180);
-        if (y + (lines.length * 7) > doc.internal.pageSize.getHeight() - 10) {
+        const lines = doc.splitTextToSize(textBlock, 180);
+        if (y + (lines.length * 5) > 280) {
             doc.addPage();
             y = 20;
         }
         doc.text(lines, 10, y);
-        y += (lines.length * 7) + 5;
+        y += lines.length * 5 + 5;
     });
 
-    doc.save("relatorio_quiz_vixgelados.pdf");
+    doc.save("relatorio_quiz.pdf");
 }
 </script>
 
